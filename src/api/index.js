@@ -15,3 +15,14 @@ export const registerAPI = ({ username, password, repassword }) => {
   })
 }
 // 没有default 不需要大括号
+// 登录接口
+export const loginAPI = ({ username, password }) => {
+  return request({
+    url: '/api/login',
+    method: 'POST',
+    data: {
+      username,
+      password
+    }
+  })
+}

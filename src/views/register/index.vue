@@ -16,7 +16,7 @@
   </el-form-item>
   <el-form-item>
     <el-button type="primary" @click="registerFn">注册</el-button>
-    <el-link type="info">去登录</el-link>
+    <el-link type="info" @click="goLogin">去登录</el-link>
 
   </el-form-item>
 </el-form>
@@ -82,6 +82,9 @@ export default {
           return false
         }
       })
+    },
+    goLogin () {
+      this.$router.push('/login')
     }
   }
 
