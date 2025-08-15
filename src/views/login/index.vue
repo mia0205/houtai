@@ -59,6 +59,8 @@ export default {
             return this.$message.error(logres.message)
           }
           this.$message.success('登录成功')
+          // 保存到vuex里
+          this.$store.commit('updateToken', logres.token)
         } else {
           return false
         }
