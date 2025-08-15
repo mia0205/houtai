@@ -4,7 +4,7 @@
       <div class="title">
         <p>后台管理系统</p>
       </div>
- <el-form :model="form" :rules="rulesObj">
+ <el-form :model="form" :rules="rulesObj" ref="form">
   <el-form-item prop="username">
     <el-input placeholder="请输入用户名" v-model="form.username"></el-input>
   </el-form-item>
@@ -27,6 +27,9 @@
 </template>
 
 <script>
+// 引入方法
+import { registerAPI } from '@/api'
+
 export default {
   name: 'my-register',
   data () {
@@ -64,7 +67,21 @@ export default {
   },
   methods: {
     registerFn () {
-
+      this.$refs.form.validate(async valid => {
+        if (valid) {
+          const { data: res } = await registerAPI(this.form)
+          console.log(res)
+          // 如果注册失败
+          // elementui 在vue原型上添加了弹窗提示，￥message
+          if (res.code !== 0) {
+            return this.$message.error(res.message)
+          }
+          this.$message.success('用户注册成功')
+          this.$router.push('/login')
+        } else {
+          return false
+        }
+      })
     }
   }
 
