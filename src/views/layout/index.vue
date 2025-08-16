@@ -28,7 +28,13 @@
   </el-menu>
   </el-header>
   <el-container>
-    <el-aside width="200px">Aside</el-aside>
+    <el-aside width="200px">
+      <div class="userbox">
+        <img :src="user_pic" alt="" v-if="user_pic">
+        <img src="../../assets/images/c5.jpg" alt="" class="img5" v-else>
+        <span>欢迎{{ username || nickname }}</span>
+      </div>
+    </el-aside>
     <el-container>
       <el-main>Main</el-main>
       <el-footer>Footer</el-footer>
@@ -38,6 +44,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'layout-index',
   methods: {
@@ -51,9 +59,13 @@ export default {
       }).then(() => {
         // 清除vuex,跳转
         this.$store.commit('updateToken', '')
+        this.$store.commit('updateUserInfo', {})
         this.$router.push('/login')
       }).catch((error) => error)
     }
+  },
+  computed: {
+    ...mapGetters(['nickname', 'username', 'user_pic'])
   }
 
 }
@@ -86,6 +98,24 @@ export default {
     background-color: #fff;
     margin-right:10px;
     object-fit: cover;
+
+  }
+  .userbox{
+    height: 50px;
+    width: 100%;
+    display: flex;
+
+    align-items: center;
+    span{
+      margin-left:20px;
+    }
+  }
+  .img5{
+    width: 40px;
+    height: 40px;
+    margin-left:10px;
+    margin-top:5px;
+    border-radius: 50%;
 
   }
 .main-container{

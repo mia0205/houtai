@@ -1,4 +1,5 @@
 import { getUserInfoAPI } from '@/api'
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 // 引入插件
@@ -12,24 +13,28 @@ export default new Vuex.Store({
     userInfo: {}
   },
   getters: {
+    // 定义三个变量
+    nickname: state => state.userInfo.nickname,
+    username: state => state.userInfo.username,
+    user_pic: state => state.userInfo.user_pic
   },
   mutations: {
     // 更新token
     updateToken (state, value) {
       state.token = value
     },
-    updateUserInfo (state, value) {
-      state.userInfo = value
+    updateUserInfo (state, val) {
+      state.userInfo = val
     }
   },
   actions: {
     async initUserInfo (store) {
-      const { data: res } = await getUserInfoAPI()
+      const res = await getUserInfoAPI()
       console.log(res)
 
       // 需要判断
-      if (res.code === 0) {
-        store.commit('updateUserInfo', res.data)
+      if (res.data.code === 0) {
+        store.commit('updateUserInfo', res.data.data)
       }
     }
   },
