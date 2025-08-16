@@ -1,3 +1,4 @@
+import { getUserInfoAPI } from '@/api'
 import Vue from 'vue'
 import Vuex from 'vuex'
 // 引入插件
@@ -7,7 +8,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: ''
+    token: '',
+    userInfo: {}
   },
   getters: {
   },
@@ -15,9 +17,21 @@ export default new Vuex.Store({
     // 更新token
     updateToken (state, value) {
       state.token = value
+    },
+    updateUserInfo (state, value) {
+      state.userInfo = value
     }
   },
   actions: {
+    async initUserInfo (store) {
+      const { data: res } = await getUserInfoAPI()
+      console.log(res)
+
+      // 需要判断
+      if (res.code === 0) {
+        store.commit('updateUserInfo', res.data)
+      }
+    }
   },
   modules: {
   },
