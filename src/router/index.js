@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -24,6 +25,18 @@ const routes = [
 // 路由懒加载就是页面路由路径切换到reg,才去加载对应的组件代码，让首页加载文件体积更新，打开更快
 const router = new VueRouter({
   routes
+})
+
+// 全局前置路由守卫
+// 当路由跳转的时候，获取用户的信息
+router.beforeEach((to, from, next) => {
+  // 写个判断
+  const token = store.state.token
+  if (token) {
+    store.dispatch('initUserInfo')
+    // 放行
+    next()
+  }
 })
 
 export default router
