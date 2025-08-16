@@ -23,7 +23,7 @@
     <el-menu-item index="1-2">更改头像</el-menu-item>
     <el-menu-item index="1-3">重置密码</el-menu-item>
   </el-submenu>
-  <el-menu-item index="2">退出</el-menu-item>
+  <el-menu-item index="2" @click="logoutFn">退出</el-menu-item>
 
   </el-menu>
   </el-header>
@@ -39,7 +39,22 @@
 
 <script>
 export default {
-  name: 'layout-index'
+  name: 'layout-index',
+  methods: {
+    // 如果组件不支持这个原生事件名字。使用@时间名.native = 'methods里的方法名'
+    logoutFn () {
+      // 提示框,在elementui里找
+      this.$confirm('您确认退出吗?', '提示', {
+        confirmButtonText: '确定',
+        concelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 清除vuex,跳转
+        this.$store.commit('updateToken', '')
+        this.$router.push('/login')
+      }).catch((error) => error)
+    }
+  }
 
 }
 </script>
