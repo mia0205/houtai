@@ -61,6 +61,8 @@ export default {
           this.$message.success('登录成功')
           // 保存到vuex里
           this.$store.commit('updateToken', logres.token)
+          // 跳转
+          this.$router.push('/layout')
         } else {
           return false
         }
