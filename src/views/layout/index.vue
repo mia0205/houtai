@@ -34,6 +34,59 @@
         <img src="../../assets/images/c5.jpg" alt="" class="img5" v-else>
         <span>欢迎{{ username || nickname }}</span>
       </div>
+<!-- el-menu:导航菜单,default-active:当前激活菜单index,open事件，打开sub-menu active-text-color和default-active一致就会设置动态文字 -->
+    <el-menu
+      default-active="/home"
+      class="el-menu-vertical-demo"
+      @open="handleOpen"
+      @close="handleClose"
+      background-color="#23262E"
+      text-color="#fff"
+      active-text-color="#409EFF">
+      <el-menu-item index="/home">
+        <template slot="title">
+          <i class="el-icon-s-home"></i>
+          <span>导航一</span>
+        </template>
+
+      </el-menu-item>
+      <el-submenu index="/topic">
+        <template  slot="title">
+          <i class="el-icon-s-order"></i>
+          <span>文章管理</span>
+        </template>
+        <el-menu-item index="/topic1">
+          <i class="el-icon-s-data"></i>
+          <span>文章分类</span>
+        </el-menu-item>
+        <el-menu-item index="/topic2">
+          <i class="el-icon-document-copy"></i>
+          <span>文章列表</span>
+        </el-menu-item>
+
+      </el-submenu>
+      <el-submenu index="/my">
+        <template slot="title">
+          <i class="el-icon-document"></i>
+          <span>个人中心</span>
+        </template>
+        <el-menu-item index="/my1">
+          <i class="el-icon-s-operation"></i>
+          <span>基本资料</span>
+        </el-menu-item>
+        <el-menu-item index="/my2">
+          <i class="el-icon-camera"></i>
+          <span>更换头像</span>
+        </el-menu-item>
+        <el-menu-item index="/my3">
+          <i class="el-icon-key"></i>
+          <span>重置密码</span>
+        </el-menu-item>
+
+      </el-submenu>
+
+    </el-menu>
+
     </el-aside>
     <el-container>
       <el-main>Main</el-main>
@@ -62,6 +115,12 @@ export default {
         this.$store.commit('updateUserInfo', {})
         this.$router.push('/login')
       }).catch((error) => error)
+    },
+    handleOpen (key, keyPath) {
+      console.log(key, keyPath)
+    },
+    handleClose (key, keyPath) {
+      console.log(key, keyPath)
     }
   },
   computed: {
