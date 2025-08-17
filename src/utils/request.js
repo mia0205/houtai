@@ -1,5 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
+import { Message } from 'element-ui'
 
 const myAxios = axios.create({
   baseURL: 'http://big-event-vue-api-t.itheima.net'
@@ -22,6 +24,26 @@ myAxios.interceptors.request.use(
     // return promise对象，这个状态会返回给下一个promise 对象，return 非promise 对象。会作为成功 的结果返回给下一个promise对象（axios)
     // 留在原地
     // reject原地留下一个新的promise对象（状态为失败） return new Promise((resolve,reject)=>{reject(error)})
+    return Promise.reject(error)
+  }
+)
+
+// 响应拦截器
+myAxios.interceptors.response.use(
+  function (response) {
+    // 响应状态码未200，3xx,reaponse成功的结果
+    return response
+  },
+  // 响应状态吗为4xx,5xx
+  function (error) {
+    // 错误打印用dir
+    if (error.response.status === 401) {
+      // token过期了,清除vuex,切换到登录页面
+      store.commit('updateToken', '')
+      store.commit('updateUserInfo', {})
+      router.push('/login')
+      Message.error('用户身份过期，请重新登录')
+    }
     return Promise.reject(error)
   }
 )
