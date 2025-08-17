@@ -42,48 +42,31 @@
       @close="handleClose"
       background-color="#23262E"
       text-color="#fff"
-      active-text-color="#409EFF">
-      <el-menu-item index="/home">
+      active-text-color="#409EFF"
+      unique-opened
+      router
+      >
+      <template v-for="item in menu">
+        <el-menu-item :index="item.indexPath" v-if="!item.children" :key="item.indexPath">
         <template slot="title">
-          <i class="el-icon-s-home"></i>
-          <span>导航一</span>
+          <i :class="item.icon"></i>
+          <span>{{ item.title }}</span>
         </template>
 
       </el-menu-item>
-      <el-submenu index="/topic">
+      <el-submenu :index="item.indexPath" v-else :key="item.indexPath">
         <template  slot="title">
-          <i class="el-icon-s-order"></i>
-          <span>文章管理</span>
+          <i :class="item.icon"></i>
+          <span>{{ item.title }}</span>
         </template>
-        <el-menu-item index="/topic1">
-          <i class="el-icon-s-data"></i>
-          <span>文章分类</span>
-        </el-menu-item>
-        <el-menu-item index="/topic2">
-          <i class="el-icon-document-copy"></i>
-          <span>文章列表</span>
+        <el-menu-item :index="i.indexPath" v-for="(i,obj) in item.children" :key="obj">
+          <i :class="i.icon"></i>
+          <span>{{ i.title }}</span>
         </el-menu-item>
 
       </el-submenu>
-      <el-submenu index="/my">
-        <template slot="title">
-          <i class="el-icon-document"></i>
-          <span>个人中心</span>
-        </template>
-        <el-menu-item index="/my1">
-          <i class="el-icon-s-operation"></i>
-          <span>基本资料</span>
-        </el-menu-item>
-        <el-menu-item index="/my2">
-          <i class="el-icon-camera"></i>
-          <span>更换头像</span>
-        </el-menu-item>
-        <el-menu-item index="/my3">
-          <i class="el-icon-key"></i>
-          <span>重置密码</span>
-        </el-menu-item>
 
-      </el-submenu>
+      </template>
 
     </el-menu>
 
@@ -98,9 +81,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getNavAPI } from '@/api'
 
 export default {
   name: 'layout-index',
+  data () {
+    return {
+      menu: []
+
+    }
+  },
+  created () {
+    this.getMenuListFn()
+  },
   methods: {
     // 如果组件不支持这个原生事件名字。使用@时间名.native = 'methods里的方法名'
     logoutFn () {
@@ -121,6 +114,13 @@ export default {
     },
     handleClose (key, keyPath) {
       console.log(key, keyPath)
+    },
+
+    // 请求侧边栏数据函数
+    async getMenuListFn () {
+      const res = await getNavAPI()
+      console.log(res)
+      this.menu = res.data.data
     }
   },
   computed: {

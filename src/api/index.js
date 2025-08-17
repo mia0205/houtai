@@ -37,3 +37,12 @@ export const getUserInfoAPI = () => {
     }
   })
 }
+// 获取侧边栏数据
+export const getNavAPI = () => {
+  return request({
+    url: '/my/menus',
+    headers: {
+      Authorization: store.state.token
+    }
+  })
+}
