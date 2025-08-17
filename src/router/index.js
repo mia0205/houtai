@@ -32,16 +32,25 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // 写个判断
   const token = store.state.token
-
-  if (token && !store.state.userInfo.username) {
-    store.dispatch('initUserInfo').then(() => {
-      next()
-    }).catch(err => {
-      console.log(err)
-    })
+  const whiteList = ['/login', '/reg']
+  // 未登录
+  if (token) {
+    if (!store.state.userInfo.username) {
+      store.dispatch('initUserInfo').then(() => {
+        next()
+      }).catch(err => {
+        console.log(err)
+      })
     // 放行
+    } else {
+      next()
+    }
   } else {
-    next()
+    if (whiteList.includes(to.path)) {
+      next()
+    } else {
+      next('/login')
+    }
   }
 })
 
