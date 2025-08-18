@@ -4,14 +4,14 @@
       <div class="title">
         <p>后台管理系统</p>
       </div>
- <el-form :rules="rulesObj" ref="loginform" :model="loginform">
-  <el-form-item prop="username">
-    <el-input placeholder="请输入用户名" v-model="loginform.username"></el-input>
-  </el-form-item>
-  <el-form-item  prop="password">
-    <el-input type="password" placeholder="请输入密码" v-model="loginform.password"></el-input>
-  </el-form-item>
-  <el-form-item>
+    <el-form :rules="rulesObj" ref="loginform" :model="loginform">
+      <el-form-item prop="username">
+        <el-input placeholder="请输入用户名" v-model="loginform.username"></el-input>
+      </el-form-item>
+      <el-form-item  prop="password">
+       <el-input type="password" placeholder="请输入密码" v-model="loginform.password"></el-input>
+      </el-form-item>
+     <el-form-item>
     <el-button type="primary" @click="loginFn">登录</el-button>
     <el-link type="info" @click="goRegister">去注册</el-link>
 

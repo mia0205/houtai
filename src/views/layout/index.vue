@@ -36,7 +36,7 @@
       </div>
 <!-- el-menu:导航菜单,default-active:当前激活菜单index,open事件，打开sub-menu active-text-color和default-active一致就会设置动态文字 -->
     <el-menu
-      default-active="/home"
+      :default-active="$route.path"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
@@ -46,6 +46,7 @@
       unique-opened
       router
       >
+      <!-- route获取路由信息对象 -->
       <template v-for="item in menu">
         <el-menu-item :index="item.indexPath" v-if="!item.children" :key="item.indexPath">
         <template slot="title">

@@ -45,3 +45,19 @@ export const getNavAPI = () => {
     // }
   })
 }
+
+// 提交修改用户信息
+export const updateUserInfoAPI = ({ id, username, nickname, email, userpic }) => {
+  return request({
+    url: '/my/userinfo',
+    method: 'PUT',
+    data: {
+      id,
+      username,
+      nickname,
+      email,
+      user_pic: userpic
+    }
+
+  })
+}

@@ -13,7 +13,20 @@ const routes = [
       {
         path: 'home',
         component: () => import('@/views/home/home.vue')
+      },
+      {
+        path: 'user-info',
+        component: () => import('@/views/user/userInfo.vue')
+      },
+      {
+        path: 'user-avatar',
+        component: () => import('@/views/user/userImage.vue')
+      },
+      {
+        path: 'user-pwd',
+        component: () => import('@/views/user/userPwd.vue')
       }
+
     ]
   },
   {
