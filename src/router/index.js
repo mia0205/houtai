@@ -7,7 +7,14 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: () => import('@/views/layout/index.vue')
+    component: () => import('@/views/layout/index.vue'),
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        component: () => import('@/views/home/home.vue')
+      }
+    ]
   },
   {
     path: '/login',
@@ -20,6 +27,7 @@ const routes = [
   {
     path: '/layout',
     component: () => import('@/views/layout/index.vue')
+
   }
 ]
 // 路由懒加载就是页面路由路径切换到reg,才去加载对应的组件代码，让首页加载文件体积更新，打开更快
