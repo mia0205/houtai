@@ -22,7 +22,7 @@
   </el-form-item>
   <el-form-item>
     <el-button type="primary" @click="submitForm">提交</el-button>
-    <el-button>重置</el-button>
+    <el-button @click="resetFn">重置</el-button>
   </el-form-item>
 </el-form>
 
@@ -74,6 +74,10 @@ export default {
           return false
         }
       })
+    },
+    resetFn () {
+      // el-form有自己的方法
+      this.$refs.userFormRef.resetFields()
     }
   }
 
