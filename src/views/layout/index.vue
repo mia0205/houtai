@@ -30,7 +30,7 @@
   <el-container>
     <el-aside width="200px">
       <div class="userbox">
-        <img :src="user_pic" alt="" v-if="user_pic">
+        <img :src="user_pic" alt="" v-if="user_pic" class="img5">
         <img src="../../assets/images/c5.jpg" alt="" class="img5" v-else>
         <span>欢迎{{ username || nickname }}</span>
       </div>
