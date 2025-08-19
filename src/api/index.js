@@ -84,3 +84,10 @@ export const updatePwdAPI = ({ pass, checkPass, newPass }) => {
     }
   })
 }
+// 获取文章分类
+export const getArtCateAPI = () => {
+  return request({
+    url: '/my/cate/list'
+
+  })
+}
