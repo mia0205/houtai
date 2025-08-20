@@ -102,3 +102,15 @@ export const addArtCateAPI = ({ name, nickname }) => {
     }
   })
 }
+// 更新分类
+export const updateArtCateAPI = ({ id, name, nickname }) => {
+  return request({
+    url: '/my/cate/info',
+    method: 'PUT',
+    data: {
+      id,
+      cate_name: name,
+      cate_alias: nickname
+    }
+  })
+}

@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card">
-  <div slot="header" class="clearfix">
+  <div class="clearfix">
     <span>文章分类</span>
     <el-button style="float: right; padding: 6px 8px;" type="primary" @click="addCateFn">添加分类</el-button>
   </div>
@@ -14,8 +14,12 @@
       <el-table-column label="分类名称" prop="cate_name"></el-table-column>
       <el-table-column label="分类别名" prop="alias"></el-table-column>
       <el-table-column label="操作" width="180">
-        <el-button type="primary" size="mini">修改</el-button>
+        <template  v-slot="scope">
+          <el-button type="primary" size="mini" @click="modifyCateFn(scope.row)">修改</el-button>
         <el-button type="danger" size="mini">删除</el-button>
+
+        </template>
+
       </el-table-column>
     </el-table>
 
@@ -47,7 +51,8 @@
 </template>
 
 <script>
-import { getArtCateAPI, addArtCateAPI } from '@/api'
+import { getArtCateAPI, addArtCateAPI, updateArtCateAPI } from '@/api'
+// 同一个按钮做状态区分，需要定义一个变量标记，定义本次要编辑的数据唯一id值
 
 export default {
   data () {
@@ -67,7 +72,9 @@ export default {
           { required: true, message: '请输入用户昵称', trigger: 'blur' },
           { pattern: /^[a-zA-Z0-9]{1,10}$/, message: '用户名必须是1-10的大小写字母数字', trigger: 'blur' }
         ]
-      }
+      },
+      isEdit: false, // true为编辑状态
+      editId: ''
 
     }
   },
@@ -79,27 +86,46 @@ export default {
     },
     addCateFn () {
       this.addVisible = true
+      this.isEdit = false
+      this.editId = ''
     },
     dialogCloseFn () {
       // this.ruleForm.name = ''
       // this.ruleForm.nickname = ''
       this.$refs.addForm.resetFields()
     },
+    // 添加分类
     subCateFn () {
       // 调接口之前需要校验
+
       this.$refs.addForm.validate(async valid => {
         if (valid) {
-          const res = await addArtCateAPI(this.ruleForm)
-          if (res.data.code !== 0) return this.$message.error(res.data.message)
-          this.$message.success(res.data.message)
+          if (!this.isEdit) {
+            const res = await addArtCateAPI(this.ruleForm)
+            if (res.data.code !== 0) return this.$message.error(res.data.message)
+            this.$message.success(res.data.message)
+          } else {
+            this.ruleForm.id = this.editId
+            const res1 = await updateArtCateAPI(this.ruleForm)
+            console.log(res1)
+          }
+
           // 再重新请求一次文章列表
-          this.getArtCateAPI()
+          this.getArtCateFn()
         } else {
           return false
         }
       })
 
       this.addVisible = false
+    },
+    // 修改分类
+    modifyCateFn (obj) {
+      this.ruleForm.name = obj.cate_name
+      this.ruleForm.nickname = obj.cate_alias
+      this.addVisible = true
+      this.isEdit = true
+      this.editId = obj.id
     }
 
   },
