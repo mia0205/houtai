@@ -124,3 +124,10 @@ export const deleteArtCateAPI = (id) => {
     }
   })
 }
+// 获取分类列表
+export const getCateListAPI = () => {
+  return request({
+    url: '/my/cate/list'
+
+  })
+}
