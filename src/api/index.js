@@ -114,3 +114,13 @@ export const updateArtCateAPI = ({ id, name, nickname }) => {
     }
   })
 }
+// 删除分类
+export const deleteArtCateAPI = (id) => {
+  return request({
+    url: '/my/cate/del',
+    method: 'DELETE',
+    params: {
+      id
+    }
+  })
+}

@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card">
-  <div class="clearfix">
+  <div slot="header" class="clearfix">
     <span>文章分类</span>
     <el-button style="float: right; padding: 6px 8px;" type="primary" @click="addCateFn">添加分类</el-button>
   </div>
@@ -16,7 +16,7 @@
       <el-table-column label="操作" width="180">
         <template  v-slot="scope">
           <el-button type="primary" size="mini" @click="modifyCateFn(scope.row)">修改</el-button>
-        <el-button type="danger" size="mini">删除</el-button>
+        <el-button type="danger" size="mini" @click="delArtCateFn(scope.row)">删除</el-button>
 
         </template>
 
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { getArtCateAPI, addArtCateAPI, updateArtCateAPI } from '@/api'
+import { getArtCateAPI, addArtCateAPI, updateArtCateAPI, deleteArtCateAPI } from '@/api'
 // 同一个按钮做状态区分，需要定义一个变量标记，定义本次要编辑的数据唯一id值
 
 export default {
@@ -65,12 +65,12 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入用户名称', trigger: 'blur' },
-          { pattern: /^[a-zA-Z0-9]{1,10}$/, message: '用户名必须是1-10的大小写字母数字', trigger: 'blur' }
+          { required: true, message: '请输入分类名称', trigger: 'blur' },
+          { pattern: /^\S{1,10}$/, message: '分类名为1-10非空字符串', trigger: 'blur' }
         ],
         nickname: [
-          { required: true, message: '请输入用户昵称', trigger: 'blur' },
-          { pattern: /^[a-zA-Z0-9]{1,10}$/, message: '用户名必须是1-10的大小写字母数字', trigger: 'blur' }
+          { required: true, message: '请输入分类别名', trigger: 'blur' },
+          { pattern: /^[a-zA-Z0-9]{1,10}$/, message: '分类别名必须是1-10的大小写字母数字', trigger: 'blur' }
         ]
       },
       isEdit: false, // true为编辑状态
@@ -121,11 +121,21 @@ export default {
     },
     // 修改分类
     modifyCateFn (obj) {
-      this.ruleForm.name = obj.cate_name
-      this.ruleForm.nickname = obj.cate_alias
       this.addVisible = true
       this.isEdit = true
       this.editId = obj.id
+      this.$nextTick(() => {
+        this.ruleForm.name = obj.cate_name
+        this.ruleForm.nickname = obj.cate_alias
+      })
+    },
+    // 删除分类
+    async delArtCateFn (obj1) {
+      this.editId = obj1.id
+      const res = await deleteArtCateAPI(this.editId)
+      if (res.data.code !== 0) return this.$message.error(res.data.message)
+      this.$message.success(res.data.message)
+      this.getArtCateFn()
     }
 
   },
