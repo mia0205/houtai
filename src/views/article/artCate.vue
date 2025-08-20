@@ -15,7 +15,7 @@
       <el-table-column label="分类别名" prop="alias"></el-table-column>
       <el-table-column label="操作" width="180">
         <el-button type="primary" size="mini">修改</el-button>
-        <el-button type="primary" size="mini">删除</el-button>
+        <el-button type="danger" size="mini">删除</el-button>
       </el-table-column>
     </el-table>
 
@@ -40,14 +40,14 @@
 
   <span slot="footer" class="dialog-footer">
     <el-button @click="addVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addVisible = false">确 定</el-button>
+    <el-button type="primary" @click="subCateFn">确 定</el-button>
   </span>
 </el-dialog>
 </el-card>
 </template>
 
 <script>
-import { getArtCateAPI } from '@/api'
+import { getArtCateAPI, addArtCateAPI } from '@/api'
 
 export default {
   data () {
@@ -84,6 +84,22 @@ export default {
       // this.ruleForm.name = ''
       // this.ruleForm.nickname = ''
       this.$refs.addForm.resetFields()
+    },
+    subCateFn () {
+      // 调接口之前需要校验
+      this.$refs.addForm.validate(async valid => {
+        if (valid) {
+          const res = await addArtCateAPI(this.ruleForm)
+          if (res.data.code !== 0) return this.$message.error(res.data.message)
+          this.$message.success(res.data.message)
+          // 再重新请求一次文章列表
+          this.getArtCateAPI()
+        } else {
+          return false
+        }
+      })
+
+      this.addVisible = false
     }
 
   },

@@ -91,3 +91,14 @@ export const getArtCateAPI = () => {
 
   })
 }
+// 添加文章分类
+export const addArtCateAPI = ({ name, nickname }) => {
+  return request({
+    url: '/my/cate/add',
+    method: 'POST',
+    data: {
+      cate_name: name,
+      cate_alias: nickname
+    }
+  })
+}
