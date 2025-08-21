@@ -24,14 +24,14 @@
 
        </el-form-item>
       <el-dialog
-        title="提示"
+        title="发表文章"
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose"
         :fullscreen="true"
         >
 
-        <el-form :model="putForm" ref="putFormRef" :rules="pubFormRules">
+        <el-form :model="putForm" ref="putFormRef" :rules="pubFormRules" class="fo">
           <el-form-item label="文章标题" prop="title">
             <el-input v-model="putForm.title" placeholder="请输入标题"></el-input>
           </el-form-item>
@@ -40,6 +40,9 @@
               <el-option :label="item.cate_name" :value="item.cate_id" v-for="(item,index) in cateList" :key="index"></el-option>
 
             </el-select>
+          </el-form-item>
+          <el-form-item label="文章内容" prop="content" class="cont">
+            <quill-editor v-model="putForm.editorContent"></quill-editor>
           </el-form-item>
         </el-form>
 
@@ -70,7 +73,8 @@ export default {
       dialogVisible: false,
       putForm: {
         title: '',
-        cate_id: ''
+        cate_id: '',
+        editorContent: ''
       },
       pubFormRules: {
         title: [
@@ -79,6 +83,10 @@ export default {
         ],
         cate_id: [
           { required: true, message: '请选择文章标题', trigger: 'blur' }
+
+        ],
+        content: [
+          { required: true, message: '请输入文章内容', trigger: 'blur' }
 
         ]
 
@@ -113,5 +121,13 @@ export default {
 </script>
 
 <style scoped lang="less">
+.fo{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .cont{
+    width: 100%;
+  }
+}
 
 </style>
