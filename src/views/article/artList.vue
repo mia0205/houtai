@@ -8,7 +8,7 @@
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" :inline="true">
       <el-form-item label="文章分类" prop="region">
     <el-select v-model="ruleForm.region" placeholder="请选择文章分类">
-      <el-option :label="item.cate_name" :value="item.cate_id" v-for="(item,index) in cateList" :key="index"></el-option>
+      <el-option :label="item.cate_name" :value="item.id" v-for="item in cateList" :key="item.id"></el-option>
 
     </el-select>
        </el-form-item>
@@ -35,22 +35,26 @@
           <el-form-item label="文章标题" prop="title">
             <el-input v-model="putForm.title" placeholder="请输入标题"></el-input>
           </el-form-item>
-          <el-form-item label="文章分类" prop="cate_id">
-            <el-select v-model="putForm.cate_id" placeholder="请选择分类">
-              <el-option :label="item.cate_name" :value="item.cate_id" v-for="(item,index) in cateList" :key="index"></el-option>
+          <el-form-item label="文章分类" prop="cateid">
+            <el-select v-model="putForm.cateid" placeholder="请选择分类">
+              <el-option :label="item.cate_name" :value="item.id" v-for="item in cateList" :key="item.id"></el-option>
 
             </el-select>
           </el-form-item>
-          <el-form-item label="文章内容" prop="content" class="cont">
-            <quill-editor v-model="putForm.editorContent"></quill-editor>
+          <el-form-item label="文章内容" prop="editorContent" class="cont">
+            <quill-editor v-model="putForm.editorContent" @change="contentChangeFn"></quill-editor>
           </el-form-item>
-          <el-form-item label="文章封面">
+          <el-form-item label="文章封面" prop="actimg">
             <img src="" alt="" class="cover-img" ref="imgRef" v-if="putForm.coverimg === '' ">
             <img :src="putForm.coverimg" alt=""  class="cover-img" v-else>
 
             <br>
             <input type="file" style="display: none;" accept="images/*" ref="iptFileRef" @change="changeCover">
             <el-button @click="checkFn">+选择封面</el-button>
+          </el-form-item>
+          <el-form-item label="文章状态">
+            <el-button type="info" @click="publicFn">保存</el-button>
+            <el-button type="primary" @click="publicFn">发表</el-button>
           </el-form-item>
         </el-form>
 
@@ -81,21 +85,26 @@ export default {
       dialogVisible: false,
       putForm: {
         title: '',
-        cate_id: '',
+        cateid: '',
         editorContent: '',
-        coverimg: ''
+        coverimg: '',
+        state: ''
       },
       pubFormRules: {
         title: [
           { required: true, message: '请输入文章标题', trigger: 'blur' },
           { min: 1, max: 30, message: '文章标题的长度为1-30个字符', trigger: 'blur' }
         ],
-        cate_id: [
-          { required: true, message: '请选择文章标题', trigger: 'blur' }
+        cateid: [
+          { required: true, message: '请选择文章标题', trigger: 'change' }
 
         ],
-        content: [
-          { required: true, message: '请输入文章内容', trigger: 'blur' }
+        editorContent: [
+          { required: true, message: '请输入文章内容', trigger: 'change' }
+
+        ],
+        actimg: [
+          { required: true, message: '请输入文章封面', trigger: 'change' }
 
         ]
 
@@ -134,8 +143,26 @@ export default {
     // 获取分类列表
     async initCateList () {
       const res = await getCateListAPI()
+      console.log('res1', res)
 
       this.cateList = res.data.data
+    },
+
+    // 发表或者保存文章
+    publicFn (str) {
+      this.putForm.state = str
+      // 兜底校验
+      this.$refs.putFormRef.validate(async valid => {
+        if (valid) {
+          console.log(this.pubForm)
+        } else {
+          return false
+        }
+      })
+    },
+    // 富文本编辑器
+    contentChangeFn () {
+      this.$refs.putFormRef.validateField('editorContent')
     }
   },
   created () {
