@@ -44,6 +44,14 @@
           <el-form-item label="文章内容" prop="content" class="cont">
             <quill-editor v-model="putForm.editorContent"></quill-editor>
           </el-form-item>
+          <el-form-item label="文章封面">
+            <img src="" alt="" class="cover-img" ref="imgRef" v-if="putForm.coverimg === '' ">
+            <img :src="putForm.coverimg" alt=""  class="cover-img" v-else>
+
+            <br>
+            <input type="file" style="display: none;" accept="images/*" ref="iptFileRef" @change="changeCover">
+            <el-button @click="checkFn">+选择封面</el-button>
+          </el-form-item>
         </el-form>
 
       </el-dialog>
@@ -74,7 +82,8 @@ export default {
       putForm: {
         title: '',
         cate_id: '',
-        editorContent: ''
+        editorContent: '',
+        coverimg: ''
       },
       pubFormRules: {
         title: [
@@ -106,6 +115,22 @@ export default {
         })
         .catch(_ => {})
     },
+    checkFn () {
+      this.$refs.iptFileRef.click()
+    },
+    changeCover (e) {
+      // e.target拿到触发事件的标签
+      const files = e.target.files
+      if (files.length === 0) {
+        this.putForm.coverimg = ''
+      } else {
+        const f = new FileReader()
+        f.readAsDataURL(files[0])
+        f.onload = e => {
+          this.putForm.coverimg = e.target.result
+        }
+      }
+    },
     // 获取分类列表
     async initCateList () {
       const res = await getCateListAPI()
@@ -128,6 +153,14 @@ export default {
   .cont{
     width: 100%;
   }
+}
+::v-deep .ql-editor{
+  min-height:300px;
+}
+.cover-img{
+  width: 400px;
+  height: 280px;
+  object-fit: cover;
 }
 
 </style>
