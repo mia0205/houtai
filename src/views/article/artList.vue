@@ -7,20 +7,20 @@
   <div class="text item">
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" :inline="true">
       <el-form-item label="文章分类" prop="region">
-    <el-select v-model="ruleForm.region" placeholder="请选择文章分类">
+    <el-select v-model="q.cate_id" placeholder="请选择文章分类">
       <el-option :label="item.cate_name" :value="item.id" v-for="item in cateList" :key="item.id"></el-option>
 
     </el-select>
        </el-form-item>
        <el-form-item label="发布状态" prop="region">
-    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
+    <el-select v-model="q.state" placeholder="请选择活动区域">
+      <el-option label="已发布" value="已发布"></el-option>
+      <el-option label="草稿" value="草稿"></el-option>
     </el-select>
        </el-form-item>
        <el-form-item>
-         <el-button type="primary">筛选</el-button>
-         <el-button type="info">重置</el-button>
+         <el-button type="primary" @click="screenFn">筛选</el-button>
+         <el-button type="info" @click="resetFn">重置</el-button>
 
        </el-form-item>
       <el-dialog
@@ -103,7 +103,9 @@ export default {
 
       },
       rules: {
-        region: {}
+        region: [
+          { required: true, message: '请输入文章标题', trigger: 'blur' }
+        ]
 
       },
       dialogVisible: false,
@@ -243,6 +245,18 @@ export default {
     },
     handleCurrentChange (val) {
       this.q.pagenum = val
+      this.getArticleListFn()
+    },
+    screenFn () {
+      this.q.pagenum = 1
+      this.q.pagesize = 1
+      this.getArticleListFn()
+    },
+    resetFn () {
+      this.q.pagenum = 1
+      this.q.pagesize = 2
+      this.q.cate_id = ''
+      this.q.state = ''
       this.getArticleListFn()
     }
 
