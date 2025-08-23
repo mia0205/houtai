@@ -132,16 +132,11 @@ export const getCateListAPI = () => {
   })
 }
 // 发布文章
-export const subArtAPI = ({ title, cateid, editorContent, coverimg, state }) => {
+export const subArtAPI = (fd) => {
   return request({
     url: '/my/article/add',
     method: 'POST',
-    data: {
-      title,
-      cate_id: cateid,
-      content: editorContent,
-      cover_img: coverimg,
-      state
-    }
+    data: fd
   })
 }
+// formData表单数据对象

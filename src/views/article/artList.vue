@@ -29,6 +29,7 @@
         width="30%"
         :before-close="handleClose"
         :fullscreen="true"
+        @close="dialogClose"
         >
 
         <el-form :model="putForm" ref="putFormRef" :rules="pubFormRules" class="fo">
@@ -53,8 +54,8 @@
             <el-button @click="checkFn">+选择封面</el-button>
           </el-form-item>
           <el-form-item label="文章状态">
-            <el-button type="info" @click="publicFn">保存</el-button>
-            <el-button type="primary" @click="publicFn">发表</el-button>
+            <el-button type="info" @click="publicFn('草稿')">保存</el-button>
+            <el-button type="primary" @click="publicFn('已发布')">发表</el-button>
           </el-form-item>
         </el-form>
 
@@ -69,7 +70,7 @@
 </template>
 
 <script>
-import { getCateListAPI } from '@/api'
+import { getCateListAPI, subArtAPI } from '@/api'
 export default {
   data () {
     return {
@@ -132,10 +133,14 @@ export default {
       const files = e.target.files
       if (files.length === 0) {
         this.putForm.coverimg = ''
+        this.putForm.coverfile = null
+
         this.$refs.putFormRef.validateField('coverimg')
       } else {
         const f = new FileReader()
         f.readAsDataURL(files[0])
+        this.putForm.coverfile = files[0]
+
         f.onload = e => {
           this.putForm.coverimg = e.target.result
           this.$nextTick(() => {
@@ -147,7 +152,6 @@ export default {
     // 获取分类列表
     async initCateList () {
       const res = await getCateListAPI()
-      console.log('res1', res)
 
       this.cateList = res.data.data
     },
@@ -158,7 +162,21 @@ export default {
       // 兜底校验
       this.$refs.putFormRef.validate(async valid => {
         if (valid) {
-          console.log(this.pubForm)
+          const fd = new FormData()
+          // append('参数名',值)
+          fd.append('title', this.putForm.title)
+          fd.append('cate_id', this.putForm.cateid)
+          fd.append('content', this.putForm.editorContent)
+
+          fd.append('cover_img', this.putForm.coverfile)
+
+          fd.append('state', this.putForm.state)
+          console.log('put', this.putForm)
+          const res = await subArtAPI(fd)
+          if (res.data.code !== 0) return this.$message.error(res.data.message)
+          this.$message.success(res.data.message)
+          // 关闭对话框
+          this.dialogVisible = false
         } else {
           return false
         }
@@ -167,6 +185,12 @@ export default {
     // 富文本编辑器
     contentChangeFn () {
       this.$refs.putFormRef.validateField('editorContent')
+    },
+    dialogClose () {
+    // 清空数据
+      this.$refs.putFormRef.resetFields()
+      this.putForm.coverfile = null
+      this.putForm.coverimg = ''
     }
   },
   created () {
