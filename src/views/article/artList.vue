@@ -44,12 +44,12 @@
           <el-form-item label="文章内容" prop="editorContent" class="cont">
             <quill-editor v-model="putForm.editorContent" @change="contentChangeFn"></quill-editor>
           </el-form-item>
-          <el-form-item label="文章封面" prop="actimg">
+          <el-form-item label="文章封面" prop="coverimg">
             <img src="" alt="" class="cover-img" ref="imgRef" v-if="putForm.coverimg === '' ">
             <img :src="putForm.coverimg" alt=""  class="cover-img" v-else>
 
             <br>
-            <input type="file" style="display: none;" accept="images/*" ref="iptFileRef" @change="changeCover">
+            <input type="file" style="display: none;" accept="image/*" ref="iptFileRef" @change="changeCover">
             <el-button @click="checkFn">+选择封面</el-button>
           </el-form-item>
           <el-form-item label="文章状态">
@@ -103,7 +103,7 @@ export default {
           { required: true, message: '请输入文章内容', trigger: 'change' }
 
         ],
-        actimg: [
+        coverimg: [
           { required: true, message: '请输入文章封面', trigger: 'change' }
 
         ]
@@ -132,11 +132,15 @@ export default {
       const files = e.target.files
       if (files.length === 0) {
         this.putForm.coverimg = ''
+        this.$refs.putFormRef.validateField('coverimg')
       } else {
         const f = new FileReader()
         f.readAsDataURL(files[0])
         f.onload = e => {
           this.putForm.coverimg = e.target.result
+          this.$nextTick(() => {
+            this.$refs.putFormRef.validateField('coverimg')
+          })
         }
       }
     },
