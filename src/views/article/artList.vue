@@ -69,7 +69,12 @@
    <el-table :data="artList" border stripe>
      <el-table-column label="标题" prop="title"></el-table-column>
      <el-table-column label="分类" prop="cate_name"></el-table-column>
-     <el-table-column label="时间" prop="pub_date"></el-table-column>
+     <el-table-column label="时间" prop="pub_date">
+      <template v-slot="scope">
+        <!-- 自定义插槽收集到变量和值 -->
+        <span>{{ $formatDate(scope.row.pub_date) }}</span>
+      </template>
+     </el-table-column>
      <el-table-column label="状态" prop="state"></el-table-column>
      <el-table-column label="操作"></el-table-column>
    </el-table>
@@ -218,7 +223,7 @@ export default {
     },
     async getArticleListFn () {
       const res = await getArticleListAPI(this.q)
-      console.log(res)
+
       this.artList = res.data.data
       this.total = res.data.data.total
     }
