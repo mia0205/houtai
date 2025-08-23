@@ -78,6 +78,16 @@
      <el-table-column label="状态" prop="state"></el-table-column>
      <el-table-column label="操作"></el-table-column>
    </el-table>
+   <!-- 分页区域 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="q.pagenum"
+      :page-sizes='[2,3,5,10]'
+      :page-size.sync="q.pagesize"
+      layout="total, prev, pager, next"
+      :total="total">
+    </el-pagination>
 </el-card>
 
 </template>
@@ -106,8 +116,8 @@ export default {
       },
       //  查询参数对象
       q: {
-        pagenum: 1,
-        pagesize: 2,
+        pagenum: 1, // 那第一页数据
+        pagesize: 2, // 当前页需要几条数据
         cate_id: '',
         state: ''
       },
@@ -226,6 +236,14 @@ export default {
 
       this.artList = res.data.data
       this.total = res.data.data.total
+    },
+    handleSizeChange (val) {
+      this.q.pagesize = val
+      this.getArticleListFn()
+    },
+    handleCurrentChange (val) {
+      this.q.pagenum = val
+      this.getArticleListFn()
     }
 
   },
