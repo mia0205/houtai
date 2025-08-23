@@ -65,12 +65,20 @@
     </el-form>
 
   </div>
+  <!-- 文章表格 -->
+   <el-table :data="artList" border stripe>
+     <el-table-column label="标题" prop="title"></el-table-column>
+     <el-table-column label="分类" prop="cate_name"></el-table-column>
+     <el-table-column label="时间" prop="pub_date"></el-table-column>
+     <el-table-column label="状态" prop="state"></el-table-column>
+     <el-table-column label="操作"></el-table-column>
+   </el-table>
 </el-card>
 
 </template>
 
 <script>
-import { getCateListAPI, subArtAPI } from '@/api'
+import { getArticleListAPI, getCateListAPI, subArtAPI } from '@/api'
 export default {
   data () {
     return {
@@ -91,6 +99,16 @@ export default {
         coverimg: '',
         state: ''
       },
+      //  查询参数对象
+      q: {
+        pagenum: 1,
+        pagesize: 2,
+        cate_id: '',
+        state: ''
+      },
+      // 保存文章列表
+      artList: [],
+      total: 0,
       pubFormRules: {
         title: [
           { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -106,6 +124,10 @@ export default {
         ],
         coverimg: [
           { required: true, message: '请输入文章封面', trigger: 'change' }
+
+        ],
+        catedate: [
+          { required: true, message: '请输入更新日期', trigger: 'blur' }
 
         ]
 
@@ -177,6 +199,8 @@ export default {
           this.$message.success(res.data.message)
           // 关闭对话框
           this.dialogVisible = false
+          // 再次请求文章列表
+          this.getArticleListFn()
         } else {
           return false
         }
@@ -191,10 +215,18 @@ export default {
       this.$refs.putFormRef.resetFields()
       this.putForm.coverfile = null
       this.putForm.coverimg = ''
+    },
+    async getArticleListFn () {
+      const res = await getArticleListAPI(this.q)
+      console.log(res)
+      this.artList = res.data.data
+      this.total = res.data.data.total
     }
+
   },
   created () {
     this.initCateList()
+    this.getArticleListFn()
   }
 
 }

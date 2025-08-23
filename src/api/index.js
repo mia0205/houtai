@@ -140,3 +140,15 @@ export const subArtAPI = (fd) => {
   })
 }
 // formData表单数据对象
+// 获取文章列表
+export const getArticleListAPI = ({ pagenum, pagesize, cateid, state }) => {
+  return request({
+    url: '/my/article/list',
+    params: {
+      pagenum,
+      pagesize,
+      cate_id: cateid,
+      state
+    }
+  })
+}
