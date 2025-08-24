@@ -152,3 +152,12 @@ export const getArticleListAPI = ({ pagenum, pagesize, cateid, state }) => {
     }
   })
 }
+// 获取文章详情
+export const getArcticleInfoAPI = (id) => {
+  return request({
+    url: '/my/article/info',
+    params: {
+      id
+    }
+  })
+}

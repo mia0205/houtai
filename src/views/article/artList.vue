@@ -67,7 +67,11 @@
   </div>
   <!-- 文章表格 -->
    <el-table :data="artList" border stripe>
-     <el-table-column label="标题" prop="title"></el-table-column>
+     <el-table-column label="标题" prop="title">
+      <template v-slot="scope">
+        <el-link type="primary" @click="getartFn(scope.row.id)">{{ scope.row.title }}</el-link>
+      </template>
+     </el-table-column>
      <el-table-column label="分类" prop="cate_name"></el-table-column>
      <el-table-column label="时间" prop="pub_date">
       <template v-slot="scope">
@@ -88,12 +92,31 @@
       layout="total, prev, pager, next"
       :total="total">
     </el-pagination>
+
+    <!-- 获取文章详情 -->
+     <el-dialog :visible="dialogVisible2" width="70%" title="文章预览" height="45%" @close="dialogClose2">
+      <el-card class="box-card" ref="cardRef">
+        <div slot="header" class="clearfix">
+          <h1>{{ artDetailList.cate_name}}</h1>
+          作者:<span>{{ artDetailList.author_id }}</span>
+          发布时间:<span>{{ artDetailList.pub_date }}</span>
+          所属分类: <span>{{ artDetailList.title }}</span>
+          状态: <span>{{ artDetailList.state }}</span>
+         </div>
+         <el-divider></el-divider>
+         <!-- 文章封面 -->
+
+        <div class="text item" v-html="artDetailList.content">
+
+        </div>
+      </el-card>
+     </el-dialog>
 </el-card>
 
 </template>
 
 <script>
-import { getArticleListAPI, getCateListAPI, subArtAPI } from '@/api'
+import { getArticleListAPI, getCateListAPI, subArtAPI, getArcticleInfoAPI } from '@/api'
 export default {
   data () {
     return {
@@ -109,6 +132,7 @@ export default {
 
       },
       dialogVisible: false,
+      dialogVisible2: false,
       putForm: {
         title: '',
         cateid: '',
@@ -147,6 +171,15 @@ export default {
           { required: true, message: '请输入更新日期', trigger: 'blur' }
 
         ]
+
+      },
+      artDetailList: {
+        author_id: '',
+        cate_name: '',
+        pub_date: '',
+        state: '',
+        title: '',
+        content: ''
 
       }
 
@@ -258,6 +291,17 @@ export default {
       this.q.cate_id = ''
       this.q.state = ''
       this.getArticleListFn()
+    },
+    async getartFn (obj) {
+      const res = await getArcticleInfoAPI(obj)
+      if (res.data.code !== 0) return this.$message.error(res.data.message)
+      this.$message.success(res.data.message)
+      this.artDetailList = res.data.data
+      this.dialogVisible2 = true
+    },
+    dialogClose2 () {
+      this.dialogVisible2 = false
+      this.artDetailList = {}
     }
 
   },
