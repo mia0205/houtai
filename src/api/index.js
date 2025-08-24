@@ -161,3 +161,13 @@ export const getArcticleInfoAPI = (id) => {
     }
   })
 }
+// 删除文章
+export const delartAPI = (id) => {
+  return request({
+    url: '/my/article/info',
+    method: 'DELETE',
+    params: {
+      id
+    }
+  })
+}

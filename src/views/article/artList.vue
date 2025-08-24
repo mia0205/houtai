@@ -80,7 +80,13 @@
       </template>
      </el-table-column>
      <el-table-column label="状态" prop="state"></el-table-column>
-     <el-table-column label="操作"></el-table-column>
+     <el-table-column label="操作">
+      <template v-slot="scope">
+        <el-button type="danger" @click="delartFn(scope.row.id)">删除</el-button>
+
+      </template>
+
+     </el-table-column>
    </el-table>
    <!-- 分页区域 -->
     <el-pagination
@@ -116,7 +122,7 @@
 </template>
 
 <script>
-import { getArticleListAPI, getCateListAPI, subArtAPI, getArcticleInfoAPI } from '@/api'
+import { getArticleListAPI, getCateListAPI, subArtAPI, getArcticleInfoAPI, delartAPI } from '@/api'
 export default {
   data () {
     return {
@@ -302,6 +308,13 @@ export default {
     dialogClose2 () {
       this.dialogVisible2 = false
       this.artDetailList = {}
+    },
+    async delartFn (id) {
+      const res = await delartAPI(id)
+      console.log(res)
+      if (res.data.code !== 0) return this.$message.error(res.data.message)
+      this.$message.success(res.data.message)
+      this.getArticleListFn()
     }
 
   },
